@@ -22,4 +22,8 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ./
       with:
-        milliseconds: 1000
+        job_url: https://ci.10clouds.com/job/10C/job/GHATest/
+        user_pass: ${{ secrets.jenkins }}
+        wait: 'true'
+        log: 'true'
+        params: '{"env_name":"sputnik", "deploy": true }'

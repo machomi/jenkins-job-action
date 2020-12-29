@@ -1,13 +1,30 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Trigger Jenkins Job'
+description: 'Jenkins'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  job_url:
+    description: 'Url to jenkins job'
     required: true
-    default: '1000'
+  user_pass:
+    description: 'User password'
+    default: ''
+    required: false
+  wait:
+    description: 'Should action wait for job to finish?'
+    default: 'false'
+    required: false
+  params:
+    description: 'Parameters as JSON string for parametrized jobs'
+    required: false
+    default: ''
+  log:
+    description: 'Should I get Jenkins Job log stream'
+    required: false
+    default: 'false'
 outputs:
-  time: # output will be available to future steps
-    description: 'The message to output'
+  url: 
+    description: 'Url to job item'
+  result:
+    description: 'Result of job execution. Can be success or failure'
 runs:
   using: 'node12'
-  main: 'dist/index.js'
+  main: 'index.js'
