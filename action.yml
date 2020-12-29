@@ -1,5 +1,5 @@
-name: 'Trigger Jenkins Job'
-description: 'This actions allows triggering Jenkins Job and wait for results.'
+name: 'Jenkins Job Trigger'
+description: 'This action allows triggering Jenkins Job and wait for its result.'
 inputs:
   job_url:
     description: 'Url to jenkins job'
