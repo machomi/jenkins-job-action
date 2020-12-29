@@ -1,5 +1,5 @@
 name: 'Trigger Jenkins Job'
-description: 'Jenkins'
+description: 'This actions allows triggering Jenkins Job and wait for results.'
 inputs:
   job_url:
     description: 'Url to jenkins job'
@@ -28,3 +28,6 @@ outputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
+branding:
+  icon: 'git-branch'  
+  color: 'blue'

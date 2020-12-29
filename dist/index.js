@@ -12,9 +12,12 @@ const FormData = __webpack_require__(334);
 const MAX_ATTEMPTS = 100;
 const SLEEP_INTERVAL = 2000; // 2s between requests
 
+const headers = {};
 const jobUrl = core.getInput('job_url');
 const userPass = core.getInput('user_pass');
-const auth = Buffer.from(userPass).toString('base64');
+if (userPass) {
+  headers.Authorization = 'Basic ' + Buffer.from(userPass).toString('base64');
+}
 const wait = core.getInput('wait').toLowerCase() == "true";
 const log = core.getInput('log').toLowerCase() == "true";
 let params = '';
@@ -43,28 +46,24 @@ let result;
 (async () => {
     try {
         const res = await fetch(jobUrl + jobUrlSuffix, {
-            headers: {
-                'Authorization': 'Basic ' + auth
-            },
+            headers: headers,
             method: "POST",
             body: form
         });
 
         if (res.status >= 400) {
             console.error(res);
-            throw new Error("Bad response from server");
+            throw new Error(`Bad response ${res.status} from jenkins for job url ` + jobUrl + jobUrlSuffix );
         }
         const location = res.headers.get('Location');
         if (wait && location) {
 
             for (let i = 0; i < MAX_ATTEMPTS; i++) {
 
-                console.debug("attempt #" + (i + 1));
+                core.debug("attempt #" + (i + 1));
 
                 let resp = await fetch(location + "api/json", {
-                    headers: {
-                        'Authorization': 'Basic ' + auth
-                    }
+                    headers: headers
                 });
                 if (resp.ok) {
                     let body = await resp.json();
@@ -76,17 +75,15 @@ let result;
                     // wait before next request
                     await new Promise(resolve => setTimeout(resolve, SLEEP_INTERVAL));
                 } else {
-                    throw new Error('Invalid response ' + resp.status);
+                    throw new Error(`Invalid response ${resp.status} for url ` + location + "api/json");
                 }
             }
             for (let i = 0; i < MAX_ATTEMPTS; i++) {
 
-                console.debug("building #" + (i + 1));
+                core.debug("building #" + (i + 1));
 
                 let resp = await fetch(jobExecutableUrl + "api/json", {
-                    headers: {
-                        'Authorization': 'Basic ' + auth
-                    }
+                    headers: headers
                 });
                 if (resp.ok) {
                     let body = await resp.json();
@@ -97,28 +94,28 @@ let result;
                     }
                     await new Promise(resolve => setTimeout(resolve, SLEEP_INTERVAL));
                 } else {
-                    throw new Error('Invalid response ' + resp.status);
+                  throw new Error(`Invalid response ${resp.status} for url ` + jobExecutableUrl + "api/json");
                 }
             }
         }
 
         if (log) {
-            console.debug("loading log stream for " + jobExecutableUrl);
+            core.debug("loading log stream for " + jobExecutableUrl);
 
             let resp = await fetch(jobExecutableUrl + "logText/progressiveText?start=0", {
-                headers: {
-                    'Authorization': 'Basic ' + auth
-                }
+                headers: headers
             });
             if (resp.ok) {
-                let body = await resp.text();
-                console.log(body);
+                await core.group("Jenkins logs", async () => {
+                  const logText = await resp.text();
+                  return logText;
+                })
             } else {
-                throw new Error('Invalid response ' + resp.status);
+              throw new Error(`Invalid response ${resp.status} for url ` + jobExecutableUrl + "logText/progressiveText?start=0");
             }
         }
     } catch (err) {
-        console.error(err);
+        core.debug(err);
         core.setFailed(err.message);
     }
 })();

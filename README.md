@@ -36,10 +36,12 @@ The result of executing job. Can be either `SUCCESS` or `FAILURE`.
 
 ## Example usage
 
-uses: machomi/trigger_jenkins_action@v1
+```
+uses: machomi/jenkins-job-action@v1
 with:
-  job_url: 'Mona the Octocat'
+  job_url: 'http://jenkins.io/job/test/'
   user_pass: user1:a01bc2d3e4f5g6h7
   wait: 'true'
   params: '{"env_name":"test","service":"demo"}'
   log: 'true'
+```
