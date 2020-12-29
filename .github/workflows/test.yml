@@ -26,4 +26,4 @@ jobs:
         user_pass: ${{ secrets.jenkins }}
         wait: 'true'
         log: 'true'
-        params: '{"env_name":"sputnik", "deploy": true }'
+        params: '{"env_name":"sputnik", "deploy": "true" }'
