@@ -21,9 +21,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: ./
+      id: jenkins
       with:
         job_url: https://ci.10clouds.com/job/10C/job/GHATest/
         user_pass: ${{ secrets.jenkins }}
         wait: 'true'
         log: 'true'
         params: '{"env_name":"sputnik", "deploy": "true" }'
+
+    - run: |
+        echo "Jenkins job execution url is ${{ steps.jenkins.outputs.url }}"
+        echo "Jenkins job result is ${{ steps.jenkins.outputs.result }}"

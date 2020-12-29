@@ -108,6 +108,7 @@ let result;
             if (resp.ok) {
                 await core.group("Jenkins logs", async () => {
                   const logText = await resp.text();
+                  core.info(logText);
                   return logText;
                 })
             } else {
