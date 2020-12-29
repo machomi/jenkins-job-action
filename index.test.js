@@ -14,6 +14,9 @@ test('test with real jenkins', () => {
     process.env['INPUT_JOB_URL'] = 'http://localhost:8080/job/demo/';
     process.env['INPUT_WAIT'] = 'true';
     process.env['INPUT_LOG'] = 'true';
+    // process.env['INPUT_WAITFORQUEUE'] = '20';
+    // process.env['INPUT_WAITFOREXECUTION'] = '20';
+    
     const ip = path.join(__dirname, 'index.js');
     console.log(cp.execSync(`node ${ip}`, {
       env: process.env

@@ -20,6 +20,14 @@ inputs:
     description: 'Should I get Jenkins Job log stream'
     required: false
     default: 'false'
+  waitForQueue:
+    description: 'Number of seconds we want to wait for job in queue'
+    required: false
+    default: '600' # 10 minutes
+  waitForExecution:
+    description: 'Number of seconds to wait for job in execution'
+    required: false
+    default: '3600' # 1 hour
 outputs:
   url: 
     description: 'Url to job item'
