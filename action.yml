@@ -27,4 +27,4 @@ outputs:
     description: 'Result of job execution. Can be success or failure'
 runs:
   using: 'node12'
-  main: 'index.js'
+  main: 'dist/index.js'
